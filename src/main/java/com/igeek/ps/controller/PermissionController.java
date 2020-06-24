@@ -26,9 +26,16 @@ public class PermissionController {
         return "role/permission";
     }
 
+    @RequestMapping("/findAllJson.action")
+    @ResponseBody
+    public List<Permission> findAllJson() throws UnsupportedEncodingException {
+        List<Permission> list = service.findAll(null);
+        return list;
+    }
+
     @RequestMapping("/add.action")
     public String insert(Permission permission){
-        service.insert(permission);
+        service.insert(permission,null);
         return "redirect:findAll.action";
     }
 
@@ -41,7 +48,7 @@ public class PermissionController {
 
     @RequestMapping("/update.action")
     public String update(Permission permission){
-        service.update(permission);
+        service.update(permission,null);
         return "redirect:findAll.action";
     }
 

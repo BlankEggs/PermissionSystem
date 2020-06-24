@@ -14,10 +14,10 @@ public interface IService<T> {
     public T findOne(Integer id);
 
     //修改
-    public void update(T t);
+    public void update(T t,Integer[] pids);
 
     //插入
-    public void insert(T t);
+    public void insert(T t,Integer[] pids);
 
     //删除
     public void delete(Integer[] ids);

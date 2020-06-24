@@ -8,8 +8,8 @@
             </div>
             <div class="modal-body">
                 <form action="" method="post" id="f">
-                		<div class="form-group" hidden="hidden">
-                				<label for="name">角色id</label>
+                    <div class="form-group" hidden="hidden">
+                        <label for="name">角色id</label>
                         <input type="text" class="form-control" id="id" placeholder="id" name="id">
                     </div>
                     <div class="form-group">
@@ -19,7 +19,7 @@
                     <div class="checkbox" id="permissions">
 						
                     </div>
-                    <button type="submit" class="btn btn-success">提交</button>
+                    <button type="submit" class="addBtn btn btn-success">提交</button>
                 </form>
             </div>
         </div>

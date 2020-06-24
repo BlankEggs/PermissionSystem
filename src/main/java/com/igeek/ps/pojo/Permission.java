@@ -1,6 +1,6 @@
 package com.igeek.ps.pojo;
 
-//权限表  alt+insert键生成构造器、getter和setter方法、toString()
+//权限类  alt+insert键生成构造器、getter和setter方法、toString()
 public class Permission {
 
     private Integer id;  //权限ID

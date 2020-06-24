@@ -37,12 +37,12 @@ public class PermissionService  implements IService<Permission> {
     }
 
     @Override
-    public void update(Permission permission) {
+    public void update(Permission permission,Integer[] pids) {
         mapper.update(permission);
     }
 
     @Override
-    public void insert(Permission permission) {
+    public void insert(Permission permission,Integer[] pids) {
         mapper.insert(permission);
     }
 
