@@ -24,7 +24,7 @@
                         <label for="url">权限url</label>
                         <input type="text" class="form-control" id="url" placeholder="url" name="url">
                     </div>
-                    <button type="submit" class="btn btn-success">提交</button>
+                    <button type="submit" class="btn btn-success" id="addbtn" >提交</button>
                 </form>
             </div>
 

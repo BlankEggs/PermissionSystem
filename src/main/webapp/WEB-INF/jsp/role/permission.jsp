@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-4">
                 <input class="btn btn-success" type="button" value="增加权限" onclick="add()">
-                <input class="btn btn-danger"  type="button" value="删除所有" onclick="">
+                <input class="btn btn-danger"  type="button" value="删除所有" onclick="deleteAll()">
             </div>
         </div>
         <div class="row">
@@ -53,14 +53,14 @@
                 </tr>
                 <c:forEach items="${pList}" var="p">
                     <tr class="data">
-                    	<td class="datachoose"><input type="checkbox" class="single"></td>
+                        <td class="datachoose"><input type="checkbox" class="single"></td>
                     	<td class="id">${p.id}</td>
                     	<td>${p.name}</td>
                     	<td>${p.desc}</td>
                     	<td>${p.url}</td>
                     	<td>
-                            <a href="javascript:void(0)" onclick="">修改</a> |
-                            <a href="#">删除</a>
+                            <a href="javascript:void(0)" class="btn btn-info" onclick="update(${p.id})">修改</a> |
+                            <a href="${pageContext.request.contextPath}/permission/delete.action?id=${p.id}" class="btn btn-danger">删除</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -84,7 +84,7 @@
 
     //增加权限
     function add(){
-        //重置模态层数据
+        //清空添加权限模态层中的数据
         $("#myModalLabel").text("添加权限");
         $("#id").val("")
         $("#name").val("")
@@ -92,15 +92,59 @@
         $("#url").val("")
 
 
-        //显示模态层
+        //显示添加权限模态层
         $("#myModal").modal();
-        //修改表单的action属性，并且提交表单
-        if($("#id").val()!="" && $("#name").val()!="" && $("#desc").val()!="" && $("#url").val()!=""){
-            $("#f").attr("action","${pageContext.request.contextPath}/permission/add.action");
-        }else{
-            alert("当前权限信息不能为空！");
-        }
 
+
+        //指定表单的action，并提交
+        $("#addbtn").click(function(){
+            $("#f").attr("action","${pageContext.request.contextPath}/permission/add.action").submit();
+        });
+
+    }
+
+    //修改权限
+    function update(id){
+        //查看
+        $.ajax({
+            type:"get",
+            url:"${pageContext.request.contextPath}/permission/findOne.action?id="+id,
+            success:function(p){
+                //给模态层初始化修改界面数据
+                $("#myModalLabel").text("修改权限");
+                $("#id").val(p.id)
+                $("#name").val(p.name)
+                $("#desc").val(p.desc)
+                $("#url").val(p.url)
+
+                //弹出修改的模态层
+                $("#myModal").modal();
+
+                //修改
+                $("#addbtn").click(function(){
+                    $("#f").attr("action","${pageContext.request.contextPath}/permission/update.action").submit();
+                });
+            }
+        });
+    }
+
+    //批量删除权限
+    function deleteAll(){
+        var str = "";
+        //迭代遍历所有的class名叫single的checkbox单选框
+        $(".single").each(function(){
+            //当前迭代到的元素是否被选中  返回true代表被选中
+            if($(this).prop("checked")){
+                //若被选中，获取当前记录的id值，做拼接
+                var id = $(this).parents(".data").find(".id").text();
+                //alert(id);
+                //拼接被选中的id值
+                str = str + "id="+id+"&";   //url?id=1&id=2&id=3&
+            }
+        });
+        str = str.substr(0,str.length-1);
+        //alert(str)
+        window.location.href = "${pageContext.request.contextPath}/permission/delete.action?"+str;
     }
 
 </script>
