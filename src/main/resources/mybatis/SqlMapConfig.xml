@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd" >
+<configuration>
+	
+	 <!-- 全局参数配置：驼峰式命名、二级缓存、延迟加载等 -->
+	 
+	 
+	 <!-- 开启别称配置 -->
+	 <typeAliases>
+	 	<package name="com.igeek.ps.pojo"/>
+		<package name="com.igeek.ps.vo"/>
+	 </typeAliases>
+
+</configuration>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.igeek.ps.mapper.PermissionMapper">
+
+    <!-- 由于Permission类中的属性名 与 表中的字段名 不一致，所以需要形成一一映射关系 -->
+    <resultMap id="BaseMap" type="Permission">
+        <id column="p_id" property="id" />
+        <id column="p_name" property="name" />
+        <id column="p_desc" property="desc" />
+        <id column="p_url" property="url" />
+    </resultMap>
+
+    <!--  条件 + 查询列表权限  -->
+    <select id="findAll" parameterType="String" resultMap="BaseMap">
+        select * from t_permission
+        where p_name like concat('%',#{name},'%')
+    </select>
+
+    <!-- 查询单条记录权限 -->
+    <select id="findOne" parameterType="Integer" resultMap="BaseMap">
+        select * from t_permission where p_id = #{id}
+    </select>
+
+    <!-- 修改权限 -->
+    <update id="update" parameterType="Permission">
+        update t_permission set p_name = #{name} , p_desc = #{desc} , p_url = #{url}
+        where p_id = #{id}
+    </update>
+
+    <!-- 插入权限 -->
+    <insert id="insert" parameterType="Permission">
+        insert into t_permission(p_name,p_desc,p_url) values(#{name},#{desc},#{url})
+    </insert>
+
+    <!-- 删除权限 -->
+    <delete id="delete" parameterType="Integer">
+        delete from t_permission where p_id=#{id}
+    </delete>
+  
+</mapper>
