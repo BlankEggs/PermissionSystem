@@ -17,7 +17,7 @@
                 <li><a href="#">会员管理</a></li><!-- custom -->
                 <li><a href="#">商品管理</a></li><!-- goods -->
                 <li><a href="#">订单管理</a></li><!-- order -->
-                <li><a href="#">系统管理</a></li>
+                <li><a href="${pageContext.request.contextPath}/permission/findAll.action">系统管理</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"></a></li>

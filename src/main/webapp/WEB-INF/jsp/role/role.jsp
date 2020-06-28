@@ -17,8 +17,8 @@
 <div class="container">
     <div class="col-md-2">
         <div class="list-group">
-            <a href="" class="list-group-item active">角色列表</a>
-            <a href="" class="list-group-item">权限列表</a>
+            <a href="${pageContext.request.contextPath}/role/findAll.action" class="list-group-item active">角色列表</a>
+            <a href="${pageContext.request.contextPath}/permission/findAll.action" class="list-group-item">权限列表</a>
             <a href="" class="list-group-item">管理员列表</a>
         </div>
     </div>
@@ -31,7 +31,7 @@
             <div class="col-md-6">
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" onclick="">查找</button>
+                        <button class="btn btn-default" type="button" onclick="findByQuery()">查找</button>
                     </span>
                     <input type="text" class="form-control" placeholder="Search for..." id="SearchName">
                 </div>
@@ -55,9 +55,9 @@
                     <td class="id">${r.id}</td>
                     <td>${r.name}</td>
                     <td>
-                        <a href="javascript:void(0)" onclick="">显示</a> |
-                        <a href="javascript:void(0)" onclick="">修改</a> |
-                        <a href="#">删除</a>
+                        <a href="javascript:void(0)" class="btn btn-info" onclick="showRole(${r.id})">显示</a> |
+                        <a href="javascript:void(0)" class="btn btn-warning" onclick="">修改</a> |
+                        <a href="#" class="btn btn-danger">删除</a>
                     </td>
                 </tr>
             </c:forEach>
@@ -73,6 +73,10 @@
 <script>
 
     //模糊查询
+    function findByQuery(){
+        var query = $("#SearchName").val();
+        window.location.href="${pageContext.request.contextPath}/role/findAll.action?query="+query;
+    }
 
     //插入角色
     function add(){
@@ -115,6 +119,40 @@
         //提交表单
         return true;
     });
+
+
+    //显示角色及其拥有的权限信息
+    function showRole(id) {
+        $.ajax({
+            type:"get",
+            url:"${pageContext.request.contextPath}/role/findOne.action?id="+id,
+            success:function(role){
+                //初始化显示角色的模态层
+                //1.显示角色名称
+                $("#myRoleModal").text(role.name);
+                //2.清空角色拥有的权限的信息
+                $("#rolepermissions").html("");
+
+                //3.获得角色拥有的权限信息
+                var permissions = role.pList;
+                if(permissions.length==0){
+                    //当前角色未配置权限
+                    $("#rolepermissions").html("<tr><td colspan='3'>当前角色未分配权限<td></tr>");
+                }else{
+                    for (var i=0;i<permissions.length;i++){
+                        var p = permissions[i];
+
+                        //4.给表格中传入权限信息
+                        $text = $("<tr><td>"+p.name+"</td><td>"+p.desc+"</td><td>"+p.url+"</td></tr>");
+                        $text.appendTo("#rolepermissions");
+                    }
+                }
+
+                //4.显示模态层
+                $("#myPermissionModal").modal();
+            }
+        });
+    }
 
 </script>
 </html>

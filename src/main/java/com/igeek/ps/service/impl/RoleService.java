@@ -41,7 +41,8 @@ public class RoleService implements IService<Role> {
 
     @Override
     public Role findOne(Integer id) {
-        return null;
+        Role role = mapper.findOne(id);
+        return role;
     }
 
     @Override

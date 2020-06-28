@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -33,5 +34,13 @@ public class RoleController {
     public String add(Role role, @RequestParam("pid") Integer[] ids){
         service.insert(role,ids);
         return "redirect:findAll.action";
+    }
+
+    //实现显示角色及拥有的权限信息
+    @RequestMapping("/findOne.action")
+    @ResponseBody
+    public Role findOne(Integer id){
+        Role role = service.findOne(id);
+        return role;
     }
 }

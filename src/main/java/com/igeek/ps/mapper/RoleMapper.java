@@ -8,10 +8,13 @@ import java.util.List;
 //角色mapper接口  alt + enter补全代码
 public interface RoleMapper {
 
-    //条件 + 查询列表权限
+    //条件 + 查询列表角色
     public List<Role> findAll(String query);
 
-    //插入权限
+    //插入橘色
     public void insert(Role role);
+
+    //显示角色，并且显示角色拥有的权限信息
+    public Role findOne(Integer id);
 
 }

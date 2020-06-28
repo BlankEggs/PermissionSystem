@@ -2,7 +2,7 @@
 <!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.igeek.ps.mapper.RoleMapper">
 
-    <!--  角色映射 -->
+    <!--  角色映射 基础值 -->
     <resultMap id="BaseMap" type="Role">
         <id column="r_id" property="id" />
         <result column="r_name" property="name"/>
@@ -10,7 +10,7 @@
 
     <!-- 条件 + 查看所有角色列表 -->
     <select id="findAll" parameterType="String" resultMap="BaseMap">
-        select * from t_role where r_name like concat('%',#{name},'%')
+        select * from t_role where r_name like concat('%',#{name},'%') order by r_id
     </select>
 
     <!-- 插入角色 当前id是自增长 -->
@@ -20,5 +20,33 @@
         </selectKey>
         insert into t_role(r_name) values(#{name})
     </insert>
+
+
+    <!-- 查询角色拥有的权限信息 -->
+    <resultMap id="RoleMap" type="Role">
+        <id column="r_id" property="id" />
+        <result column="r_name" property="name"/>
+
+        <!--
+            一对多 collection
+            property属性：type指定的pojo类型中集合的属性名
+            ofType属性：type指定的pojo类型中集合的泛型
+        -->
+        <collection property="pList" ofType="Permission">
+            <id column="p_id" property="id" />
+            <result column="p_name" property="name" />
+            <result column="p_desc" property="desc" />
+            <result column="p_url" property="url" />
+        </collection>
+    </resultMap>
+
+    <select id="findOne" parameterType="Integer" resultMap="RoleMap" >
+        select rrp.* , p.p_name, p.p_desc, p.p_url
+        from
+        ( select r.*,rp.p_id
+        from t_role r LEFT JOIN t_role_permission rp on  r.r_id=rp.r_id ) rrp
+        left join t_permission p on rrp.p_id=p.p_id
+        where rrp.r_id = #{id}
+    </select>
 
 </mapper>
