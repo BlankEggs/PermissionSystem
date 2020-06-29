@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-4">
                 <input class="btn btn-success" type="button" value="增加角色" onclick="add()">
-                <input class="btn btn-danger" type="button" value="删除所有" onclick="">
+                <input class="btn btn-danger" type="button" value="删除所有" onclick="deleteAll()">
             </div>
         </div>
         <div class="row">
@@ -56,8 +56,8 @@
                     <td>${r.name}</td>
                     <td>
                         <a href="javascript:void(0)" class="btn btn-info" onclick="showRole(${r.id})">显示</a> |
-                        <a href="javascript:void(0)" class="btn btn-warning" onclick="">修改</a> |
-                        <a href="#" class="btn btn-danger">删除</a>
+                        <a href="javascript:void(0)" class="btn btn-warning" onclick="update(${r.id})">修改</a> |
+                        <a href="${pageContext.request.contextPath}/role/delete.action?id=${r.id}" class="btn btn-danger">删除</a>
                     </td>
                 </tr>
             </c:forEach>
@@ -112,7 +112,7 @@
     $("#f").on("submit",function(){
         if($(".checkbox :checkbox:checked").length==0) {
             //当前未选择权限，不提交表单
-            alert("添加角色时，必须勾选权限")
+            alert("操作角色时，必须勾选权限")
             return false;
         }
 
@@ -137,7 +137,7 @@
                 var permissions = role.pList;
                 if(permissions.length==0){
                     //当前角色未配置权限
-                    $("#rolepermissions").html("<tr><td colspan='3'>当前角色未分配权限<td></tr>");
+                    $("#rolepermissions").html("<tr><td colspan='3'>当前角色未分配权限</td></tr>");
                 }else{
                     for (var i=0;i<permissions.length;i++){
                         var p = permissions[i];
@@ -152,6 +152,82 @@
                 $("#myPermissionModal").modal();
             }
         });
+    }
+
+
+    //修改角色及其拥有的权限
+    function update(id){
+        //查询选中当前行的角色信息
+        $.ajax({
+            type:"get",
+            url:"${pageContext.request.contextPath}/role/findOne.action?id="+id,
+            success:function(role){
+                //初始化修改页面
+                $("#myModalLabel").text("修改角色");
+                //角色id
+                $("#id").val(role.id);
+                //角色名称
+                $("#name").val(role.name);
+                //角色拥有的权限
+                var psChoose = role.pList;
+
+                //查询所有权限
+                $.ajax({
+                   type:"get",
+                   url:"${pageContext.request.contextPath}/permission/findAllJson.action",
+                   success:function(ps){
+                       //清空权限展示的div
+                       $("#permissions").html("");
+
+
+                       //迭代所有权限
+                       for(var i=0;i<ps.length;i++){
+                           //标识：代表没有相同的权限
+                           var flag = false;
+
+                           //迭代拥有的权限
+                           for(var j=0;j<psChoose.length;j++){
+                               //比较是否有相同的，若有则当前CheckBox应该是被选中的状态
+                               if(ps[i].id == psChoose[j].id){
+                                   $text = $("<label><input type='checkbox' checked name='pid' value='"+ps[i].id+"' />"+ps[i].name+"</label><br/>");
+                                   flag = true;
+                               }
+                           }
+
+                           //代表没有相同的权限，则当前checkbox是未选中状态
+                           if(!flag){
+                               $text = $("<label><input type='checkbox' name='pid' value='"+ps[i].id+"' />"+ps[i].name+"</label><br/>");
+                           }
+
+                           $text.appendTo("#permissions");
+                       }
+
+                       //显示修改模态层
+                       $("#myModal").modal();
+                       //指定修改表单的action
+                       $("#f").attr("action","${pageContext.request.contextPath}/role/update.action");
+                   }
+                });
+            }
+        });
+    }
+
+
+    //批量删除角色
+    function deleteAll(){
+        var str = "";
+        //迭代遍历所有的class名叫single的checkbox单选框
+        $(".single").each(function(){
+            //当前迭代到的元素是否被选中  返回true代表被选中
+            if($(this).prop("checked")){
+                //若被选中，获取当前记录的id值，做拼接
+                var id = $(this).parents(".data").find(".id").text();
+                //拼接被选中的id值
+                str = str + "id="+id+"&";   //url?id=1&id=2&id=3&
+            }
+        });
+        str = str.substr(0,str.length-1);
+        window.location.href = "${pageContext.request.contextPath}/role/delete.action?"+str;
     }
 
 </script>

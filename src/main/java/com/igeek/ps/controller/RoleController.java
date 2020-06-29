@@ -43,4 +43,18 @@ public class RoleController {
         Role role = service.findOne(id);
         return role;
     }
+
+    //修改角色及其拥有的权限
+    @RequestMapping("/update.action")
+    public String update(Role role,@RequestParam(value="pid") Integer[] pids){
+        service.update(role, pids);
+        return "redirect:findAll.action";
+    }
+
+    //删除角色
+    @RequestMapping("/delete.action")
+    public String delete(@RequestParam(value = "id") Integer[] ids){
+        service.delete(ids);
+        return "redirect:findAll.action";
+    }
 }

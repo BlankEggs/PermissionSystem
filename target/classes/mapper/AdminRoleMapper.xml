@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.igeek.ps.mapper.AdminRoleMapper">
+
+    <!-- 创建管理员时赋予角色，等价于需要给这张关系表插入数据 -->
+    <insert id="insert" parameterType="AdminRoleVO">
+        insert into t_admin_role(m_id,r_id) values(#{aId},#{rId})
+    </insert>
+
+
+    <!-- 删除管理员或删除角色，等价于需要给这张关系表删除数据 -->
+    <delete id="delete" parameterType="AdminRoleVO">
+        delete from t_admin_role
+        <where>
+            <if test="aId!=0">
+                and m_id = #{aId}
+            </if>
+            <if test="rId!=0">
+                and r_id = #{rId}
+            </if>
+        </where>
+    </delete>
+  
+</mapper>

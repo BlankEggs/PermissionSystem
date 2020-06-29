@@ -49,4 +49,14 @@
         where rrp.r_id = #{id}
     </select>
 
+    <!-- 修改角色信息 -->
+    <update id="update" parameterType="Role">
+        update t_role set r_name=#{name} where r_id=#{id}
+    </update>
+
+    <!-- 删除角色信息 -->
+    <delete id="delete" parameterType="Integer">
+        delete from t_role where r_id=#{id}
+    </delete>
+
 </mapper>
