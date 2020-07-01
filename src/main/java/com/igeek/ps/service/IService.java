@@ -8,7 +8,7 @@ import java.util.List;
 public interface IService<T> {
 
     //条件 + 查询列表
-    public List<T> findAll(String query) throws UnsupportedEncodingException;
+    public List<T> findAll(String query);
 
     //查询单条记录
     public T findOne(Integer id);

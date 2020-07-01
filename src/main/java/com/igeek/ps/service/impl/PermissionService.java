@@ -20,7 +20,7 @@ public class PermissionService  implements IService<Permission> {
     private RolePermissionMapper rpMapper;
 
     @Override
-    public List<Permission> findAll(String query) throws UnsupportedEncodingException {
+    public List<Permission> findAll(String query) {
         if(query==null){
             query = "";
         }

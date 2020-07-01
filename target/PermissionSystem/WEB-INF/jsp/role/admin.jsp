@@ -17,9 +17,9 @@
 <div class="container">
     <div class="col-md-2">
         <div class="list-group">
-            <a href="#" class="list-group-item">角色列表</a>
-            <a href="#" class="list-group-item">权限列表</a>
-            <a href="#" class="list-group-item active">管理员列表</a>
+            <a href="${pageContext.request.contextPath}/role/findAll.action" class="list-group-item">角色列表</a>
+            <a href="${pageContext.request.contextPath}/permission/findAll.action" class="list-group-item">权限列表</a>
+            <a href="${pageContext.request.contextPath}/admin/findAll.action" class="list-group-item active">管理员列表</a>
         </div>
     </div>
     <div class="col-md-9 col-md-offset-1">
@@ -31,7 +31,7 @@
             <div class="col-md-6">
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" onclick="">查找</button>
+                        <button class="btn btn-default" type="button" onclick="findByQuery()">查找</button>
                     </span>
                     <input type="text" class="form-control" placeholder="Search for..." id="searchName">
                 </div>
@@ -49,15 +49,15 @@
                     <th>管理员名称</th>
                     <th>操作</th>
                 </tr>
-                <c:forEach items="" var="">
+                <c:forEach items="${adminList}" var="admin">
                     <tr class="data">
                         <td class="datachoose"><input type="checkbox" class="single"></td>
-                        <td class="id"></td>
-                        <td></td>
+                        <td class="id">${admin.mId}</td>
+                        <td>${admin.mName}</td>
                         <td>
-                            <a href="javascript:void(0)" onclick="">显示</a> |
-                            <a href="javascript:void(0)" onclick="">修改</a> |
-                            <a href="#">删除</a>
+                            <a href="javascript:void(0)" class="btn btn-info" onclick="showAdmin(${admin.mId})">显示</a> |
+                            <a href="javascript:void(0)" class="btn btn-warning" onclick="">修改</a> |
+                            <a href="#" class="btn btn-danger">删除</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -69,6 +69,60 @@
 <%@include file="addAdminModal.jsp"%>
 <%@include file="showAdminRole.jsp"%>
 
+<script>
+
+    //模糊查询
+    function findByQuery(){
+        var query = $("#searchName").val();
+        window.location.href="${pageContext.request.contextPath}/admin/findAll.action?query="+query;
+    }
+
+    //显示
+    function showAdmin(id) {
+        $.ajax({
+            type:"get",
+            url:"${pageContext.request.contextPath}/admin/findOne.action?id="+id,
+            success:function (admin) {
+                //初始化显示管理员角色及权限页面信息
+                $("#myAdminModal").text(admin.mName);
+                $("#adminRolePermissions").html("");
+
+                //当前管理员拥有的角色列表
+                var roleList = admin.roleList;
+                if(roleList.length==0){
+                    $("#adminRolePermissions").html("<tr><td colspan='2'>当前管理员未分配角色</td></tr>");
+                }else{
+                    for(var i=0;i<roleList.length;i++){
+                        //当前角色
+                        var role = roleList[i];
+                        //当前角色拥有的权限列表
+                        var pList = role.pList;
+                        if(pList.length==0){
+                            //显示角色信息，此时角色没有分配权限
+                            $text = $("<tr><td>"+role.name+"</td><td>当前角色未分配权限</td></tr>");
+                            $text.appendTo("#adminRolePermissions");
+                        }else{
+                            for(var j=0;j<pList.length;j++){
+                                //当前权限
+                                var p = pList[j];
+                                if(j==0){
+                                    $text = $("<tr><td rowspan='"+pList.length+"'>"+role.name+"</td><td>"+p.desc+"</td></tr>");
+                                }else{
+                                    $text = $("<tr><td>"+p.desc+"</td></tr>");
+                                }
+                                $text.appendTo("#adminRolePermissions");
+                            }
+                        }
+                    }
+                }
+
+                //弹出模态层
+                $("#myRoleModal").modal();
+            }
+        });
+    }
+
+</script>
 
 </body>
 </html>

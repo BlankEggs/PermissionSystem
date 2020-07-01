@@ -25,7 +25,7 @@ public class RoleService implements IService<Role> {
     private AdminRoleMapper arMapper;
 
     @Override
-    public List<Role> findAll(String query) throws UnsupportedEncodingException {
+    public List<Role> findAll(String query) {
         if(query==null){
             query = "";
         }

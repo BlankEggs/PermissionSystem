@@ -19,7 +19,7 @@
         <div class="list-group">
             <a href="${pageContext.request.contextPath}/role/findAll.action" class="list-group-item">角色列表</a>
             <a href="${pageContext.request.contextPath}/permission/findAll.action" class="list-group-item active">权限列表</a>
-            <a href="#" class="list-group-item">管理员列表</a>
+            <a href="${pageContext.request.contextPath}/admin/findAll.action" class="list-group-item">管理员列表</a>
         </div>
     </div>
     <div class="col-md-9 col-md-offset-1">

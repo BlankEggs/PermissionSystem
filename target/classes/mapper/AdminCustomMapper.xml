@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.igeek.ps.mapper.AdminCustomMapper" >
+
+  <!-- 通过id查询管理员的信息（管理员的信息、该管理员拥有的角色信息、以及角色对应的权限信息） -->
+  <resultMap id="map" type="AdminCustom">
+    <id column="m_id" property="mId" />
+    <result column="m_name" property="mName" />
+    <result column="m_pwd" property="mPwd" />
+
+    <!-- 一对多关联角色 -->
+    <collection property="roleList" ofType="Role">
+      <id column="r_id" property="id"/>
+      <result column="r_name" property="name"/>
+
+      <!-- 一对多关联权限 -->
+      <collection property="pList" ofType="Permission">
+        <id column="p_id" property="id"/>
+        <result column="p_desc" property="desc"/>
+      </collection>
+    </collection>
+  </resultMap>
+
+
+  <select id="findOneById" parameterType="Integer" resultMap="map">
+    select mmrrrp.* , p.p_desc
+    from
+    ( select mmrr.* , rp.p_id
+    from
+    ( select mmr.* , r.r_name
+    from
+    ( select m.* , mr.r_id from t_admin m LEFT JOIN t_admin_role mr ON m.m_id = mr.m_id )mmr
+    LEFT JOIN t_role r on mmr.r_id = r.r_id ) mmrr
+    LEFT JOIN t_role_permission rp on mmrr.r_id = rp.r_id ) mmrrrp
+    LEFT JOIN t_permission p on mmrrrp.p_id = p.p_id
+    where mmrrrp.m_id=#{id}
+  </select>
+
+
+</mapper>
